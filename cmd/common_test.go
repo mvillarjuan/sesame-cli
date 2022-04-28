@@ -9,11 +9,6 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-var (
-	server *httptest.Server
-	ext    External
-)
-
 func TestGetSessionIdWithoutError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/api/v3/security/login" {
