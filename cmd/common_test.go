@@ -23,7 +23,7 @@ func TestGetSessionIdWithoutError(t *testing.T) {
 	defer server.Close()
 
 	expectedSessionId := "27fdfc761b323943a1349a220fe57c0f1bcf4d6345f574b160cfc7090e4006c5f"
-	sessionId, err := getSesionId(server.URL, mock.Anything, mock.Anything)
+	sessionId, err := getSessionId(server.URL, mock.Anything, mock.Anything)
 
 	assert.Nil(t, err)
 	assert.Equal(t, expectedSessionId, sessionId)

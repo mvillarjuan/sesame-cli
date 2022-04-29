@@ -6,7 +6,6 @@ import (
 	"net/http"
 )
 
-
 type ApiLoginResponse struct {
 	Data string `json:"data"`
 	Meta struct {
@@ -17,8 +16,7 @@ type ApiLoginResponse struct {
 	} `json:"meta"`
 }
 
-
-func getSesionId(sesameUrl, sesameUsername, sesamePassword string) (string, error) {
+func getSessionId(sesameUrl, sesameUsername, sesamePassword string) (string, error) {
 	values := map[string]string{"foo": "bar"}
 	jsonData, _ := json.Marshal(values)
 
