@@ -66,6 +66,7 @@ func initConfig() {
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
 		viper.SetConfigName(".cobra-cli")
+		viper.SetDefault("sesameUrl", "back.sesametime.com")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
