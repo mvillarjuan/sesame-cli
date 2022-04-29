@@ -28,7 +28,23 @@ func TestGetSessionIdWithoutError(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, expectedSessionId, sessionId)
 }
+func TestGetSessionIdWithServerError(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/api/v3/security/login" {
+			t.Errorf("Expected to request '/api/v3/security/login', got: %s", r.URL.Path)
+		}
+		if r.Header.Get("Accept") != "application/json" {
+			t.Errorf("Expected Accept: application/json header, got: %s", r.Header.Get("Accept"))
+		}
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"data":"27fdfc761b323943a1349a220fe57c0f1bcf4d6345f574b160cfc7090e4006c5f"}`))
+	}))
+	defer server.Close()
 
+	_, err := getSessionId(server.URL, mock.Anything, mock.Anything)
+
+	assert.NotNil(t, err)
+}
 func TestGetUserIdWithoutError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/api/v3/security/me" {
@@ -49,4 +65,21 @@ func TestGetUserIdWithoutError(t *testing.T) {
 	userId, err := getUserId(server.URL, "27fdfc761b323943a1349a220fe57c0f1bcf4d6345f574b160cfc7090e4006c5f")
 	assert.Nil(t, err)
 	assert.Equal(t, expectedUserId, userId)
+}
+
+func TestGetUserIdWithServerError(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/api/v3/security/me" {
+			t.Errorf("Expected to request '/api/v3/security/me', got: %s", r.URL.Path)
+		}
+		if r.Header.Get("Accept") != "application/json" {
+			t.Errorf("Expected Accept: application/json header, got: %s", r.Header.Get("Accept"))
+		}
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(mock.Anything))
+	}))
+	defer server.Close()
+
+	_, err := getUserId(server.URL, mock.Anything)
+	assert.NotNil(t, err)
 }

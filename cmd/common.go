@@ -3,6 +3,7 @@ package cmd
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"time"
 )
@@ -303,7 +304,10 @@ func getSessionId(sesameUrl, sesameUsername, sesamePassword string) (string, err
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		return "", err
+	}
+	if res.StatusCode != http.StatusOK {
+		return "", errors.New("error: unexpected server response")
 	}
 	defer res.Body.Close()
 	post := &ApiLoginResponse{}
@@ -323,7 +327,10 @@ func getUserId(sesameUrl, sessionId string) (string, error) {
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		return "", err
+	}
+	if res.StatusCode != http.StatusOK {
+		return "", errors.New("error: unexpected server response")
 	}
 	defer res.Body.Close()
 	post := &ApiMeResponse{}
