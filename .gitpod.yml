@@ -1,9 +1,7 @@
 tasks:
   - init: |
       go get github.com/spf13/cobra/cobra
-      go build
-    command: |
-      ./mycli --help
+      go install github.com/spf13/cobra-cli@latest
 vscode:
   extensions:
     - golang.go
