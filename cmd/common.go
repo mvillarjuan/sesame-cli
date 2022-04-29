@@ -304,7 +304,7 @@ func getSessionId(sesameUrl, sesameUsername, sesamePassword string) (string, err
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return "", errors.New("error: could not connect to server")
 	}
 	if res.StatusCode != http.StatusOK {
 		return "", errors.New("error: unexpected server response")
@@ -327,7 +327,7 @@ func getUserId(sesameUrl, sessionId string) (string, error) {
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return "", errors.New("error: could not connect to server")
 	}
 	if res.StatusCode != http.StatusOK {
 		return "", errors.New("error: unexpected server response")
