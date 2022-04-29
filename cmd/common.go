@@ -2,13 +2,10 @@ package cmd
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"net/http"
 )
 
-type Data struct {
-}
 
 type ApiLoginResponse struct {
 	Data string `json:"data"`
@@ -20,9 +17,6 @@ type ApiLoginResponse struct {
 	} `json:"meta"`
 }
 
-type External interface {
-	FetchData(ctx context.Context, id string) (*Data, error)
-}
 
 func getSesionId(sesameUrl, sesameUsername, sesamePassword string) (string, error) {
 	values := map[string]string{"foo": "bar"}
