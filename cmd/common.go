@@ -313,7 +313,7 @@ func getSessionId(sesameUrl, sesameUsername, sesamePassword string) (string, err
 	post := &ApiLoginResponse{}
 	derr := json.NewDecoder(res.Body).Decode(post)
 	if derr != nil {
-		panic(derr)
+		return "", errors.New("error: unable to process server response")
 	}
 	return post.Data, nil
 }
@@ -336,7 +336,7 @@ func getUserId(sesameUrl, sessionId string) (string, error) {
 	post := &ApiMeResponse{}
 	derr := json.NewDecoder(res.Body).Decode(post)
 	if derr != nil {
-		panic(derr)
+		return "", errors.New("error: unable to process server response")
 	}
 	return post.Data[0].ID, nil
 }

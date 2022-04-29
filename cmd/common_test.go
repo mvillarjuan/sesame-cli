@@ -45,6 +45,23 @@ func TestGetSessionIdWithServerError(t *testing.T) {
 
 	assert.NotNil(t, err)
 }
+func TestGetSessionIdWithUnexpectedResponse(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/api/v3/security/login" {
+			t.Errorf("Expected to request '/api/v3/security/login', got: %s", r.URL.Path)
+		}
+		if r.Header.Get("Accept") != "application/json" {
+			t.Errorf("Expected Accept: application/json header, got: %s", r.Header.Get("Accept"))
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(``))
+	}))
+	defer server.Close()
+
+	_, err := getSessionId(server.URL, mock.Anything, mock.Anything)
+
+	assert.NotNil(t, err)
+}
 func TestGetUserIdWithoutError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/api/v3/security/me" {
@@ -66,7 +83,6 @@ func TestGetUserIdWithoutError(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, expectedUserId, userId)
 }
-
 func TestGetUserIdWithServerError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/api/v3/security/me" {
@@ -76,6 +92,22 @@ func TestGetUserIdWithServerError(t *testing.T) {
 			t.Errorf("Expected Accept: application/json header, got: %s", r.Header.Get("Accept"))
 		}
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(mock.Anything))
+	}))
+	defer server.Close()
+
+	_, err := getUserId(server.URL, mock.Anything)
+	assert.NotNil(t, err)
+}
+func TestGetUserIdWithUnexpectedResponse(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/api/v3/security/me" {
+			t.Errorf("Expected to request '/api/v3/security/me', got: %s", r.URL.Path)
+		}
+		if r.Header.Get("Accept") != "application/json" {
+			t.Errorf("Expected Accept: application/json header, got: %s", r.Header.Get("Accept"))
+		}
+		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(mock.Anything))
 	}))
 	defer server.Close()
