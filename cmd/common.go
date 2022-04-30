@@ -43,7 +43,7 @@ func getSessionId(sesameUrl, sesameUsername, sesamePassword string) (string, err
 func getUserId(sesameUrl, sessionId string) (string, error) {
 	values := map[string]string{"origin": "web"}
 	jsonData, _ := json.Marshal(values)
-	req, _ := http.NewRequest(http.MethodPost, sesameUrl+"/api/v3/security/me", bytes.NewBuffer(jsonData))
+	req, _ := http.NewRequest(http.MethodGet, sesameUrl+"/api/v3/security/me", bytes.NewBuffer(jsonData))
 	req.Header.Add("Authorization", "Bearer "+sessionId)
 	req.Header.Add("Accept", "application/json")
 	client := &http.Client{}
