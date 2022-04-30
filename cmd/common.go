@@ -17,8 +17,8 @@ type ApiMeResponse struct {
 	} `json:"data"`
 }
 
-func getSessionId(sesameUrl, sesameUsername, sesamePassword string) (string, error) {
-	values := map[string]string{"origin": "web"}
+func getSessionId(sesameUrl, sesameEmail, sesamePassword string) (string, error) {
+	values := map[string]string{"email": sesameEmail, "password": sesamePassword}
 	jsonData, _ := json.Marshal(values)
 
 	req, _ := http.NewRequest(http.MethodPost, sesameUrl+"/api/v3/security/login", bytes.NewBuffer(jsonData))
